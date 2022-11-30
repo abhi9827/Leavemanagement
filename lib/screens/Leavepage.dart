@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:login/providers/leave_provider.dart';
 
-
 class Leavepage extends StatefulWidget {
   const Leavepage({Key? key}) : super(key: key);
 
@@ -33,6 +32,7 @@ class _LeavepageState extends State<Leavepage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(child: Text("Apply For Leave")),
+        backgroundColor: Colors.red,
       ),
       body: SingleChildScrollView(
         child: SafeArea(
@@ -147,31 +147,31 @@ class _LeavepageState extends State<Leavepage> {
                     padding: const EdgeInsets.symmetric(vertical: 17.0),
                     child: Container(
                       height: 43,
-                      child: Consumer(
-                        builder: (context, ref, child) {
-                          return ElevatedButton(
-                            onPressed: () async{
-                              _formKey.currentState!.save();
-                              if (_formKey.currentState!.validate()) {
-                               final response =await ref.read(crudProvider).addLeave(
-                                   full_name: fullnameController.text.trim(),
-                                   faculty: facultyController.text.trim(),
-                                   uid: FirebaseAuth.instance.currentUser!.uid,
-                                   datetime: dateController.text.trim(),
-                                   semaster: semesterController.text.trim(),
-                                   reason: reasonController.text.trim()
-                               );
-                               if(response == 'success'){
-                                 Get.back();
-                               }
+                      child: Consumer(builder: (context, ref, child) {
+                        return ElevatedButton(
+                          onPressed: () async {
+                            _formKey.currentState!.save();
+                            if (_formKey.currentState!.validate()) {
+                              final response = await ref
+                                  .read(crudProvider)
+                                  .addLeave(
+                                      full_name: fullnameController.text.trim(),
+                                      faculty: facultyController.text.trim(),
+                                      uid: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      datetime: dateController.text.trim(),
+                                      semaster: semesterController.text.trim(),
+                                      reason: reasonController.text.trim());
+                              if (response == 'success') {
+                                Get.back();
                               }
-                            },
-                            child: const Text(
-                              'Submit',
-                            ),
-                          );
-                        }
-                      ),
+                            }
+                          },
+                          child: const Text(
+                            'Submit',
+                          ),
+                        );
+                      }),
                     ),
                   ),
                 ],
