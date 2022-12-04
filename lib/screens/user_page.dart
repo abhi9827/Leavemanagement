@@ -70,15 +70,15 @@ class UserPage extends ConsumerWidget {
                           onTap: () {
                             Navigator.of(context).pop();
                           },
-                          leading: Icon(Icons.mail),
-                          title: Text(data.metadata!['email']),
+                          leading: Icon(Icons.contacts),
+                          title: Text('${data.firstName!}'),
                         ),
                         ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
                           },
-                          leading: Icon(Icons.contacts),
-                          title: Text(data.firstName!),
+                          leading: Icon(Icons.mail),
+                          title: Text(data.metadata!['email']),
                         ),
                         ListTile(
                           onTap: () {

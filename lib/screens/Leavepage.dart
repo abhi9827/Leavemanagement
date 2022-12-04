@@ -1,9 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:login/providers/leave_provider.dart';
+
+import '../main.dart';
 
 class Leavepage extends StatefulWidget {
   const Leavepage({Key? key}) : super(key: key);
@@ -13,6 +17,8 @@ class Leavepage extends StatefulWidget {
 }
 
 class _LeavepageState extends State<Leavepage> {
+  @override
+
   // int selectedIndex = 0;
   final _formKey = GlobalKey<FormState>();
 
@@ -23,6 +29,67 @@ class _LeavepageState extends State<Leavepage> {
   final semesterController = new TextEditingController();
 
   DateTime selectedDate = DateTime.now();
+  void initState() {
+    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/ic_launcher',
+              ),
+            ));
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text(notification.title!),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(notification.body!)],
+                  ),
+                ),
+              );
+            });
+      }
+    });
+  }
+
+  void showNotification() {
+    setState(() {});
+    flutterLocalNotificationsPlugin.show(
+      0,
+      '${fullnameController.text}',
+      "Requesting Leave",
+      NotificationDetails(
+        android: AndroidNotificationDetails(channel.id, channel.name,
+            channelDescription: channel.description,
+            importance: Importance.high,
+            color: Colors.blue,
+            playSound: true,
+            icon: '@mipmap/ic_launcher'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // final tabs = [
@@ -151,6 +218,7 @@ class _LeavepageState extends State<Leavepage> {
                         return ElevatedButton(
                           onPressed: () async {
                             _formKey.currentState!.save();
+
                             if (_formKey.currentState!.validate()) {
                               final response = await ref
                                   .read(crudProvider)
@@ -162,6 +230,7 @@ class _LeavepageState extends State<Leavepage> {
                                       datetime: dateController.text.trim(),
                                       semaster: semesterController.text.trim(),
                                       reason: reasonController.text.trim());
+                              showNotification();
                               if (response == 'success') {
                                 Get.back();
                               }

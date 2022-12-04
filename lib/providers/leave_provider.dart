@@ -5,20 +5,17 @@ import 'package:login/model/leave_model.dart';
 final crudProvider = Provider((ref) => LeaveProvider());
 final leaveStream = StreamProvider((ref) => LeaveProvider().getPosts());
 
-class LeaveProvider{
-
+class LeaveProvider {
   CollectionReference leaveDb = FirebaseFirestore.instance.collection('leaves');
 
-  Future<String> addLeave({
-    required String full_name,
-    required String uid,
-    required String datetime,
-    required String semaster,
-    required String reason,
-    required String faculty
-  }) async{
-    try{
-
+  Future<String> addLeave(
+      {required String full_name,
+      required String uid,
+      required String datetime,
+      required String semaster,
+      required String reason,
+      required String faculty}) async {
+    try {
       await leaveDb.add({
         'full_name': full_name,
         'uid': uid,
@@ -32,31 +29,26 @@ class LeaveProvider{
       });
 
       return 'success';
-    }on FirebaseException catch(err){
-
+    } on FirebaseException catch (err) {
       return '${err.message}';
     }
-
-
   }
 
-
   Stream<List<LeaveModel>> getPosts() {
-    try{
+    try {
       return leaveDb.snapshots().map((event) {
         return getLeaveData(event);
       });
-    }on FirebaseException catch(err){
+    } on FirebaseException catch (err) {
       throw '${err.message}';
     }
-
   }
 
-  List<LeaveModel>getLeaveData(QuerySnapshot snapshot){
-    return snapshot.docs.map((e){
+  List<LeaveModel> getLeaveData(QuerySnapshot snapshot) {
+    return snapshot.docs.map((e) {
       final json = e.data() as Map<String, dynamic>;
       return LeaveModel(
-        faculty: json['faculty'],
+          faculty: json['faculty'],
           id: e.id,
           uid: json['uid'],
           accept: json['accept'],
@@ -65,43 +57,33 @@ class LeaveProvider{
           pending: json['pending'],
           reason: json['reason'],
           reject: json['reject'],
-          semaster: json['semaster']
-      );
+          semaster: json['semaster']);
     }).toList();
   }
 
-
-
-
-  Future<String> leaveGrant(String id) async{
-    try{
+  Future<String> leaveGrant(String id) async {
+    try {
       await leaveDb.doc(id).update({
         'pending': false,
         'accept': true,
         'reject': false,
       });
       return 'success';
-    }on FirebaseException catch(err){
+    } on FirebaseException catch (err) {
       return '${err.message}';
     }
-
   }
 
-
-
-  Future<String> leaveReject(String id) async{
-    try{
+  Future<String> leaveReject(String id) async {
+    try {
       await leaveDb.doc(id).update({
         'pending': false,
         'accept': false,
         'reject': true,
       });
       return 'success';
-    }on FirebaseException catch(err){
+    } on FirebaseException catch (err) {
       return '${err.message}';
     }
-
   }
-
-
 }

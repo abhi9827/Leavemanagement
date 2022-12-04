@@ -280,10 +280,10 @@ class AuthPage extends ConsumerWidget {
                                                         .text
                                                         .trim(),
                                                   );
-                                              ref
-                                                  .read(
-                                                      loadingProvider.notifier)
-                                                  .toggle();
+                                              // ref
+                                              //     .read(
+                                              //         loadingProvider.notifier)
+                                              //     .toggle();
                                             } else {
                                               if (image == null) {
                                                 Get.defaultDialog(
@@ -322,10 +322,6 @@ class AuthPage extends ConsumerWidget {
                                                           .text
                                                           .trim(),
                                                     );
-                                                ref
-                                                    .read(loadingProvider
-                                                        .notifier)
-                                                    .toggle();
                                               }
                                             }
                                           }

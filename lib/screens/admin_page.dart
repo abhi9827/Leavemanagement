@@ -32,69 +32,74 @@ class AdminPage extends ConsumerWidget {
             ),
           ),
           drawer: Drawer(
-              child: userData.when(
-                  data: (data) {
-                    return ListView(
-                      children: [
-                        DrawerHeader(
-                            child: Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(data.imageUrl!),
-                                  fit: BoxFit.cover)),
-                          child: Text(
-                            data.firstName!,
-                            style: TextStyle(color: Colors.white, fontSize: 22),
-                          ),
-                        )),
-                        ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          leading: Icon(Icons.contact_mail),
-                          title: Text('${data.firstName!}'),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          leading: Icon(Icons.mail),
-                          title: Text(data.metadata!['email']),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          leading: Icon(Icons.notifications),
-                          title: Text('Notice'),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          leading: Icon(Icons.bookmark_sharp),
-                          title: Text('Exam'),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          leading: Icon(Icons.holiday_village),
-                          title: Text('Holiday'),
-                        ),
-                        ListTile(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            ref.read(authProvider).userLogOut();
-                          },
-                          leading: Icon(Icons.exit_to_app),
-                          title: Text('Sign Out'),
-                        ),
-                      ],
-                    );
-                  },
-                  error: (err, stack) => Center(child: Text('$err')),
-                  loading: () => Center(child: CircularProgressIndicator()))),
+            child: userData.when(
+              data: (data) {
+                return ListView(
+                  children: [
+                    DrawerHeader(
+                        child: Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(data.imageUrl!),
+                              fit: BoxFit.cover)),
+                      child: Text(
+                        ' ${data.firstName!}',
+                        style: TextStyle(color: Colors.white, fontSize: 22),
+                      ),
+                    )),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      leading: Icon(Icons.contacts),
+                      title: Text(
+                          '${data.firstName!} ${data.lastName ?? "Lamichhane"}'),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      leading: Icon(Icons.mail),
+                      title: Text(data.metadata!['email']),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      leading: Icon(Icons.notifications),
+                      title: Text('Notice'),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      leading: Icon(Icons.bookmark_sharp),
+                      title: Text('Exam'),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      leading: Icon(Icons.holiday_village),
+                      title: Text('Holiday'),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        ref.read(authProvider).userLogOut();
+                      },
+                      leading: Icon(Icons.exit_to_app),
+                      title: Text('Sign Out'),
+                    ),
+                  ],
+                );
+              },
+              error: (err, stack) => Center(child: Text('$err')),
+              loading: () => Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
           body: TabBarView(children: [
             TabBarWidget(Status.pending, true),
             TabBarWidget(Status.accept, true),

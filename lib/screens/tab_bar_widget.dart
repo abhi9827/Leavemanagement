@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:login/model/leave_model.dart';
 
 import 'package:login/providers/leave_provider.dart';
+
+import '../main.dart';
 
 enum Status { pending, accept, reject }
 
@@ -17,9 +20,44 @@ class TabBarWidget extends StatefulWidget {
 }
 
 class _TabBarWidgetState extends State<TabBarWidget> {
+  void AcceptshowNotification() {
+    setState(() {});
+    flutterLocalNotificationsPlugin.show(
+      0,
+      'Admin',
+      "Accept Your Leave Request",
+      NotificationDetails(
+        android: AndroidNotificationDetails(channel.id, channel.name,
+            channelDescription: channel.description,
+            importance: Importance.high,
+            color: Colors.blue,
+            playSound: true,
+            icon: '@mipmap/ic_launcher'),
+      ),
+    );
+  }
+
+  void RejectshowNotification() {
+    setState(() {});
+    flutterLocalNotificationsPlugin.show(
+      0,
+      'Admin',
+      "Reject Your Leave Request",
+      NotificationDetails(
+        android: AndroidNotificationDetails(channel.id, channel.name,
+            channelDescription: channel.description,
+            importance: Importance.high,
+            color: Colors.blue,
+            playSound: true,
+            icon: '@mipmap/ic_launcher'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -60,15 +98,15 @@ class _TabBarWidgetState extends State<TabBarWidget> {
           void _alertDialog(BuildContext context) {
             var alert = AlertDialog(
               title: Center(
-                child: Text(leave[index].full_name),
+                child: Text(leave[index].full_name.toUpperCase()),
               ),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
-                    Text(leave[index].reason),
-                    Text(leave[index].faculty),
-                    Text(leave[index].datetime),
-                    Text(leave[index].semaster),
+                    Text('Reason: ${leave[index].reason.toUpperCase()}'),
+                    Text('Date: ${leave[index].datetime}'),
+                    Text('Faculty: ${leave[index].faculty.toUpperCase()}'),
+                    Text('Semester: ${leave[index].semaster.toUpperCase()}'),
                   ],
                 ),
               ),
@@ -106,6 +144,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                                               ref
                                                   .read(crudProvider)
                                                   .leaveGrant(leave[index].id);
+                                              AcceptshowNotification();
                                             },
                                             child: Text('Yes')),
                                         TextButton(
@@ -136,11 +175,13 @@ class _TabBarWidgetState extends State<TabBarWidget> {
                                               ref
                                                   .read(crudProvider)
                                                   .leaveReject(leave[index].id);
+                                              RejectshowNotification();
                                             },
                                             child: Text('Yes')),
                                         TextButton(
                                             onPressed: () {
                                               Navigator.of(context).pop();
+                                              // RejectshowNotification();
                                             },
                                             child: Text('No')),
                                       ]);
