@@ -27,7 +27,7 @@ class AdminPage extends ConsumerWidget {
                 ),
                 Tab(
                   text: 'Reject',
-                ),
+                 ),
               ]),
             ),
           ),

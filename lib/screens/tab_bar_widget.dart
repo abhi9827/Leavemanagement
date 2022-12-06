@@ -42,7 +42,7 @@ class _TabBarWidgetState extends State<TabBarWidget> {
     flutterLocalNotificationsPlugin.show(
       0,
       'Admin',
-      "Reject Your Leave Request",
+      "Rejected Your Leave Request",
       NotificationDetails(
         android: AndroidNotificationDetails(channel.id, channel.name,
             channelDescription: channel.description,
